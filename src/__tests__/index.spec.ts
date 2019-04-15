@@ -1,4 +1,4 @@
-import {hotReddit, bestReddit, hotYCombinator} from '..';
+import {hotReddit, bestReddit, hotYCombinator, controversialReddit} from '..';
 
 describe('hotReddit', () => {
   it('gives higher rating to never content', async () => {
@@ -79,6 +79,36 @@ describe('hotYCombinator', () => {
     const ts = Date.now();
     const score1 = hotYCombinator(1, ts);
     const score2 = hotYCombinator(111, ts);
+
+    expect(score2).toBeGreaterThan(score1);
+  });
+});
+
+describe('controversialReddit', () => {
+  it('gives higher score to content with more down votes', async () => {
+    const score1 = controversialReddit(100, 10);
+    const score2 = controversialReddit(100, 50);
+
+    expect(score2).toBeGreaterThan(score1);
+  });
+
+  it('gives higher score to content with more down votes - 2', async () => {
+    const score1 = controversialReddit(100, 50);
+    const score2 = controversialReddit(100, 120);
+
+    expect(score2).toBeGreaterThan(score1);
+  });
+
+  it('ranks higher content with more activity', async () => {
+    const score1 = controversialReddit(2, 2);
+    const score2 = controversialReddit(100, 100);
+
+    expect(score2).toBeGreaterThan(score1);
+  });
+
+  it('ranks higher content with more activity - 2', async () => {
+    const score1 = controversialReddit(10, 20);
+    const score2 = controversialReddit(100, 110);
 
     expect(score2).toBeGreaterThan(score1);
   });
