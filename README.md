@@ -17,6 +17,10 @@ then
 
 ```js
 import {hotReddit, hotYCombinator, bestReddit} from 'content-ranking';
+
+hotReddit(ups, dows, createdTimeInMilliseconds);
+hotYCombinator(ups, createdTimeInMilliseconds);
+bestReddit(ups, dows);
 ```
 
 
