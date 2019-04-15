@@ -2,7 +2,7 @@
  * Reddit's hot content scoring function. Used for raking higher most recent and
  * highest voted content. More recent content items get higher score automatically.
  *
- * - See: https://medium.com/hacking-and-gonzo/how-reddit-ranking-algorithms-work-ef111e33d0d9
+ * - See: https://github.com/reddit-archive/reddit/blob/d990533d0b57a499cefcec70f4c51d8c5593c497/r2/r2/lib/db/_sorts.pyx#L47-L58
  *
  * @param ups Number of up votes.
  * @param downs Number of down votes.
@@ -33,7 +33,7 @@ export function hotYCombinator (ups: number, ts: number = Date.now()) {
  * Reddit's content scoring function for finding best replies regardless of time
  * when content was created. This function does not penalize old content.
  *
- * - See: https://medium.com/hacking-and-gonzo/how-reddit-ranking-algorithms-work-ef111e33d0d9
+ * - See: https://github.com/reddit-archive/reddit/blob/d990533d0b57a499cefcec70f4c51d8c5593c497/r2/r2/lib/db/_sorts.pyx#L70-L85
  *
  * @param ups Number of up votes.
  * @param downs Number of down votes.
@@ -47,4 +47,19 @@ export function bestReddit (ups: number, downs: number) {
   const right = z * Math.sqrt(p * (1 - p) / n + z * z / (4 * n * n));
   const under = 1 + 1 / n * z * z;
   return (left - right) / under;
+}
+
+/**
+ * Reddit's algorithm for scoring high controversial content.
+ *
+ * - See: https://github.com/reddit-archive/reddit/blob/d990533d0b57a499cefcec70f4c51d8c5593c497/r2/r2/lib/db/_sorts.pyx#L60-L68
+ *
+ * @param ups Number of up votes.
+ * @param downs Number of down votes.
+ */
+export function controversialReddit (ups: number, downs: number) {
+  if (!ups || !downs) return 0;
+  const magnitude = ups + downs;
+  const balance = ups > downs ? (downs / ups) : (ups / downs);
+  return magnitude ** balance;
 }
